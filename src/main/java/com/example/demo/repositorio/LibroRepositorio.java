@@ -1,10 +1,8 @@
-package com.example.demo.Repositorio;
+package com.example.demo.repositorio;
 
-import com.example.demo.Modelo.Libro;
+import com.example.demo.modelo.Libro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Clase repositorio para Libro, comunicado con la bd
@@ -15,6 +13,5 @@ import java.util.List;
 
 @Repository
 public interface LibroRepositorio extends JpaRepository<Libro, Long> {
-    /*@Override
-    List<Libro> findByNombre(String nombre);*/
+    //obtenemos "SQL" automaticamente
 }

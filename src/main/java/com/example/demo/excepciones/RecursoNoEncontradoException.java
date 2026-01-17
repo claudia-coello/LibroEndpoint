@@ -1,4 +1,4 @@
-package com.example.demo.Excepciones;
+package com.example.demo.excepciones;
 
 public class RecursoNoEncontradoException extends RuntimeException {
     public RecursoNoEncontradoException(String message) {

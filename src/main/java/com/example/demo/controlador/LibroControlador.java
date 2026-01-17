@@ -1,7 +1,7 @@
-package com.example.demo.Controlador;
+package com.example.demo.controlador;
 
-import com.example.demo.Modelo.Libro;
-import com.example.demo.Servicio.LibroServicio;
+import com.example.demo.modelo.Libro;
+import com.example.demo.servicio.LibroServicio;
 import org.springframework.web.bind.annotation.*;
 
 /**
