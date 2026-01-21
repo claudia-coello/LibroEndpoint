@@ -29,7 +29,7 @@ public class LibroServicio {
      * @return Libro
      */
     public Libro guardarLibro(Libro libro) {
-        if (libro.getStock()>0) throw new StockInvalidoException("El stock no puede ser un numero negativo.");
+        if (libro.getStock()<0) throw new StockInvalidoException("El stock no puede ser un numero negativo.");
         return repo.save(libro);
     }
 

@@ -2,10 +2,13 @@ package com.example.demo.controlador;
 
 import com.example.demo.modelo.Libro;
 import com.example.demo.servicio.LibroServicio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Clase controlador para usuario,
@@ -32,13 +35,16 @@ public class LibroControlador {
 
     /**
      * Clase para crear o actualizar libro
-     * @param libro
+     * @param libros
      * @return Libro
      */
-    @PostMapping
-    public Libro guardarLibro(@RequestBody Libro libro){
-        return servicio.guardarLibro(libro);
+    @PostMapping("/bulk")
+    public List<Libro> guardarLibros(@Valid @RequestBody List<Libro> libros){
+        return libros.stream()
+                .map(servicio::guardarLibro)
+                .collect(Collectors.toList());
     }
+
 
     /**
      * Clase para buscar libros segun un id
@@ -65,8 +71,10 @@ public class LibroControlador {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void eliminarLibroPorId(@PathVariable Long id){
+    public ResponseEntity<Void> eliminarLibroPorId(@PathVariable Long id){
         servicio.eliminarLibroPorId(id);
+        return ResponseEntity.noContent().build();
     }
+
 
 }
