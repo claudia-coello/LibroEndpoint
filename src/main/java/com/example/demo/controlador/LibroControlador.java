@@ -40,7 +40,7 @@ public class LibroControlador {
      * @param libros
      * @return Libro
      */
-    @PostMapping("/guardar")
+    @PostMapping("/crear")
     public ResponseEntity<List<Libro>> guardarLibros(@Valid @RequestBody List<Libro> libros){
         return ResponseEntity.ok(libros.stream().map(libroServicio::guardarLibro).toList());
     }
@@ -83,6 +83,7 @@ public class LibroControlador {
      * @param cambios
      * @return Libro
      */
+    @PatchMapping("/actualizar/{id}")
     public ResponseEntity<Libro> actualizarLibro(@PathVariable Long id, @RequestBody Map<String, Object> cambios){
         return ResponseEntity.ok(libroServicio.actualizarLibro(id, cambios));
     }
