@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -21,16 +22,17 @@ import java.util.stream.Collectors;
 
 public class LibroControlador {
 
-    @Autowired
-    private LibroServicio servicio;
-
+    private LibroServicio libroServicio;
+    private LibroControlador(LibroServicio libroServicio){
+        this.libroServicio = libroServicio;
+    }
     /**
      * Clase listar todos los libros
      * @return Arreglo de Libro
      */
     @GetMapping//endpoint tipo get
-    public List<Libro> listarLibros(){
-        return servicio.listarLibros();
+    public ResponseEntity<List<Libro>> listarLibros(){
+        return ResponseEntity.ok(libroServicio.listarLibros());
     }
 
     /**
@@ -38,11 +40,9 @@ public class LibroControlador {
      * @param libros
      * @return Libro
      */
-    @PostMapping("/bulk")
-    public List<Libro> guardarLibros(@Valid @RequestBody List<Libro> libros){
-        return libros.stream()
-                .map(servicio::guardarLibro)
-                .collect(Collectors.toList());
+    @PostMapping("/guardar")
+    public ResponseEntity<List<Libro>> guardarLibros(@Valid @RequestBody List<Libro> libros){
+        return ResponseEntity.ok(libros.stream().map(libroServicio::guardarLibro).toList());
     }
 
 
@@ -52,8 +52,8 @@ public class LibroControlador {
      * @return Libro
      */
     @GetMapping("/{id}")
-    public Libro buscarLibroPorId(@PathVariable Long id){
-       return servicio.buscarLibroPorId(id);
+    public ResponseEntity<Libro> buscarLibroPorId(@PathVariable Long id){
+       return ResponseEntity.ok(libroServicio.buscarLibroPorId(id));
     }
 
     /**
@@ -62,19 +62,28 @@ public class LibroControlador {
      * @return Lista de libros(puede ser solo uno)
      */
     @GetMapping("/titulo/{titulo}")
-    public List<Libro> buscarLibroPorTitulo(@PathVariable String titulo){
-        return servicio.buscarLibroPorTitulo(titulo);
+    public ResponseEntity<List<Libro>> buscarLibroPorTitulo(@PathVariable String titulo){
+        return ResponseEntity.ok(libroServicio.buscarLibroPorTitulo(titulo));
     }
 
     /**
      * Clase para eliminar un libro por su id
      * @param id
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarLibroPorId(@PathVariable Long id){
-        servicio.eliminarLibroPorId(id);
+        libroServicio.eliminarLibroPorId(id);
         return ResponseEntity.noContent().build();
     }
 
 
+    /**
+     * Clase para actualizar un libro por su id
+     * @param id
+     * @param cambios
+     * @return Libro
+     */
+    public ResponseEntity<Libro> actualizarLibro(@PathVariable Long id, @RequestBody Map<String, Object> cambios){
+        return ResponseEntity.ok(libroServicio.actualizarLibro(id, cambios));
+    }
 }

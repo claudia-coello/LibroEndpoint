@@ -16,5 +16,5 @@ import java.util.Optional;
 
 @Repository
 public interface LibroRepositorio extends JpaRepository<Libro, Long> {
-    List<Libro> findLibroByTitulo(String titulo);//clas epersonalizada para buscar por titulo
+    List<Libro> findLibroByTitulo(String titulo);//clase personalizada para buscar por titulo
 }

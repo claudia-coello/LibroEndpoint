@@ -7,8 +7,11 @@ import com.example.demo.repositorio.LibroRepositorio;
 import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -20,11 +23,16 @@ import java.util.Optional;
  */
 @Service
 public class LibroServicio {
-    @Autowired
     private LibroRepositorio repo;
+    private ObjectMapper objectMapper;
+
+    public LibroServicio(LibroRepositorio repo, ObjectMapper ob){
+        this.repo=repo;
+        this.objectMapper=ob;
+    }
 
     /**
-     * Clase que guarda y actualiza un libro
+     * Clase que guardar libro/s
      * @param libro
      * @return Libro
      */
@@ -67,6 +75,20 @@ public class LibroServicio {
      * @param id
      */
     public void eliminarLibroPorId(Long id){
+        if (!repo.existsById(id)) throw new RecursoNoEncontradoException("Libro no encontrado con ese id");
         repo.deleteById(id);
     }
+
+    /**
+     * Clase para actualizar un libro
+     * @param id
+     * @param cambios
+     * @return Libro
+     */
+    public Libro actualizarLibro(Long id, Map<String, Object> cambios){
+        Libro libro = repo.findById(id).orElseThrow(()-> new RecursoNoEncontradoException("Libro no encontrado con ese id"));
+        objectMapper.updateValue(libro, cambios);
+        return repo.save(libro);
+    }
+
 }
