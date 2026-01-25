@@ -1,30 +1,25 @@
 package com.example.demo.servicio;
 
-import com.example.demo.excepciones.RecursoNoEncontradoException;
+import com.example.demo.excepciones.LibroNoEncontradoException;
 import com.example.demo.excepciones.StockInvalidoException;
 import com.example.demo.modelo.Libro;
 import com.example.demo.repositorio.LibroRepositorio;
-import org.aspectj.apache.bcel.classfile.Module;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
- * Clase de servisio para Usuario, logica, validaciones y reglas de negocio.
+ * Clase de servicio para Usuario, logica, validaciones y reglas de negocio.
  * @author Claudia Coello
  * @version 1.0
- * @see com.example.demo.controlador.LibroControlador
  * @see LibroRepositorio
  */
 @Service
 public class LibroServicio {
-    private LibroRepositorio repo;
-    private ObjectMapper objectMapper;
+    private final LibroRepositorio repo;
+    private final ObjectMapper objectMapper;
 
     public LibroServicio(LibroRepositorio repo, ObjectMapper ob){
         this.repo=repo;
@@ -34,11 +29,11 @@ public class LibroServicio {
     /**
      * Clase que guardar libro/s
      * @param libro
-     * @return Libro
      */
-    public Libro guardarLibro(Libro libro) {
+    public void crearLibros(Libro libro) {
         if (libro.getStock()<0) throw new StockInvalidoException("El stock no puede ser un numero negativo.");
-        return repo.save(libro);
+        if (libro.getId() != null) throw new IllegalArgumentException("No se debe enviar el id al crear un libro");
+        repo.save(libro);
     }
 
     /**
@@ -46,7 +41,9 @@ public class LibroServicio {
      * @return Lista de tipo libro
      */
     public List<Libro> listarLibros(){
-        return repo.findAll();
+        List<Libro> librosEncontrados = repo.findAll();
+        if (librosEncontrados.isEmpty()) throw new LibroNoEncontradoException("No se encontró ningún libro.");
+        return librosEncontrados;
     }
 
     /**
@@ -55,18 +52,17 @@ public class LibroServicio {
      * @return Libro
      */
     public Libro buscarLibroPorId(Long id){
-        return repo.findById(id).orElseThrow(() -> new RecursoNoEncontradoException("Libro no encontrado con ese id"));
+        return repo.findById(id).orElseThrow(() -> new LibroNoEncontradoException("Ningún libro encontrado con ese id"));
     }
 
     /**
-     * Clase que devuelve un libro si coincide con algun titulo
+     * Clase que devuelve un libro si coincide con algún título
      * @param titulo
      * @return Libro
      */
     public List<Libro> buscarLibroPorTitulo(String titulo){
         List<Libro> librosEncontrados = repo.findLibroByTitulo(titulo);
-
-        if (librosEncontrados.isEmpty()) throw new RecursoNoEncontradoException("No se encontro ningun libro con ese titulo");
+        if (librosEncontrados.isEmpty()) throw new LibroNoEncontradoException("No se encontró ningún libro con ese titulo");
         return librosEncontrados;
     }
 
@@ -75,7 +71,7 @@ public class LibroServicio {
      * @param id
      */
     public void eliminarLibroPorId(Long id){
-        if (!repo.existsById(id)) throw new RecursoNoEncontradoException("Libro no encontrado con ese id");
+        if (!repo.existsById(id)) throw new LibroNoEncontradoException("Libro no encontrado con ese id");
         repo.deleteById(id);
     }
 
@@ -83,12 +79,14 @@ public class LibroServicio {
      * Clase para actualizar un libro
      * @param id
      * @param cambios
-     * @return Libro
      */
-    public Libro actualizarLibro(Long id, Map<String, Object> cambios){
-        Libro libro = repo.findById(id).orElseThrow(()-> new RecursoNoEncontradoException("Libro no encontrado con ese id"));
+    public void actualizarLibro(Long id, Map<String, Object> cambios){
+        if (cambios.containsKey("id")) throw new IllegalArgumentException("No se permite modificar el id.");
+        Libro libro = repo.findById(id).orElseThrow(() -> new LibroNoEncontradoException("Libro no encontrado con ese id."));
+        if (libro.getStock() < 0) throw new StockInvalidoException("El stock no puede ser negativo.");
         objectMapper.updateValue(libro, cambios);
-        return repo.save(libro);
+        repo.save(libro);
     }
+
 
 }

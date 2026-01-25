@@ -5,16 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Clase repositorio para Libro, comunicado con la bd
  * @author Claudia Coello
  * @version 1.1
- * @see com.example.demo.servicio.LibroServicio
+ * @see Libro
  */
 
 @Repository
 public interface LibroRepositorio extends JpaRepository<Libro, Long> {
-    List<Libro> findLibroByTitulo(String titulo);//clase personalizada para buscar por titulo
+    List<Libro> findLibroByTitulo(String titulo);//clase personalizada para buscar por título
 }

@@ -1,10 +1,8 @@
 package com.example.demo.modelo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
@@ -18,19 +16,19 @@ import java.time.LocalDate;
 @Table(name = "libros")
 public class Libro {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//autoincremental
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//autoincrement
     private Long id;
 
-    @NotNull
-    @Size(min = 1, max = 300)
+    @NotBlank(message = "El titulo no puede estar vacío")
+    @Size(max = 300)
     private String titulo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaPublicacion;
 
     private String autor;
 
-    @Min(0)
-    @Max(1000000000)
+    @Min(value = 0, message = "El stock no puede ser negativo")
     private int stock;
 
     public Libro(){}

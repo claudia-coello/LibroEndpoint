@@ -3,27 +3,25 @@ package com.example.demo.controlador;
 import com.example.demo.modelo.Libro;
 import com.example.demo.servicio.LibroServicio;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Clase controlador para usuario,
  * @author Claudia Coello
  * @version 1.0
- * @see Libro
+ * @see LibroServicio
  */
 @RestController//marca la clase como controlador rest, devuelve JSON o texto
 @RequestMapping("/libros")//es la ruta del controlador
 
 public class LibroControlador {
 
-    private LibroServicio libroServicio;
-    private LibroControlador(LibroServicio libroServicio){
+    private final LibroServicio libroServicio;
+    public LibroControlador(LibroServicio libroServicio){
         this.libroServicio = libroServicio;
     }
     /**
@@ -41,13 +39,13 @@ public class LibroControlador {
      * @return Libro
      */
     @PostMapping("/crear")
-    public ResponseEntity<List<Libro>> guardarLibros(@Valid @RequestBody List<Libro> libros){
-        return ResponseEntity.ok(libros.stream().map(libroServicio::guardarLibro).toList());
+    public ResponseEntity<Map<String, String>> crearLibros(@RequestBody List<@Valid Libro> libros){
+        libros.forEach(libroServicio::crearLibros);
+        return ResponseEntity.ok(Map.of("mensaje", "Libros creados correctamente"));
     }
 
-
     /**
-     * Clase para buscar libros segun un id
+     * Clase para buscar libros según un id
      * @param id
      * @return Libro
      */
@@ -57,7 +55,7 @@ public class LibroControlador {
     }
 
     /**
-     * Clase para buscar por titulo del libro
+     * Clase para buscar por título del libro
      * @param titulo
      * @return Lista de libros(puede ser solo uno)
      */
@@ -71,9 +69,9 @@ public class LibroControlador {
      * @param id
      */
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<Void> eliminarLibroPorId(@PathVariable Long id){
+    public ResponseEntity<Map<String, String>> eliminarLibroPorId(@PathVariable Long id){
         libroServicio.eliminarLibroPorId(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("mensaje", "Libro eliminado correctamente"));
     }
 
 
@@ -84,7 +82,9 @@ public class LibroControlador {
      * @return Libro
      */
     @PatchMapping("/actualizar/{id}")
-    public ResponseEntity<Libro> actualizarLibro(@PathVariable Long id, @RequestBody Map<String, Object> cambios){
-        return ResponseEntity.ok(libroServicio.actualizarLibro(id, cambios));
+    public ResponseEntity<Map<String, String>> actualizarLibro(@PathVariable Long id, @RequestBody Map<String, Object> cambios){
+        libroServicio.actualizarLibro(id, cambios);
+        return ResponseEntity.ok(Map.of("mensaje", "Libro actualizado correctamente"));
     }
+
 }

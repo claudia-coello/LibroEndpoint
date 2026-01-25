@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Libros</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<h1>📚 Gestión de Libros</h1>
+
+<section>
+    <h2>Crear / Actualizar Libro</h2>
+    <form id="libroForm">
+        <input type="hidden" id="id">
+
+        <input type="text" id="titulo" placeholder="Título" required>
+        <input type="text" id="autor" placeholder="Autor" required>
+        <input type="date" id="fechaPublicacion" required>
+        <input type="number" id="stock" placeholder="Stock" required>
+
+        <button type="submit">Guardar</button>
+    </form>
+</section>
+
+<section>
+    <h2>Listado de Libros</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Fecha Publicación</th>
+            <th>Stock</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="tablaLibros"></tbody>
+    </table>
+</section>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
