@@ -37,17 +37,9 @@ Operaciones: Crear, buscar, actualizar, eliminar y leer.
 ### Crear libros(uno o varios)
 **POST**
 
-'/libros' + JSON
+'/libros' + JSON(lista)
 
 ***IMPORTANTE: No colocar id en el JSON***
-
-{
-
-    "autor": "STRING",
-    "fechaPublicacion": "YY-MM-DD",
-    "stock": INT,
-    "titulo": "STRING"
-}
 
 ### Eliminar libro
 **DELETE**
@@ -55,23 +47,25 @@ Operaciones: Crear, buscar, actualizar, eliminar y leer.
 
 ### Actualizar libro
 **PATCH**
-'/libros/{id}' + JSON
+'/libros/{id}' + JSON(lista)
 
 ***IMPORTANTE: No colocar id en el JSON***
 
-### Body JSON, estructura general
-{
+### Body JSON, datos de prueba
+[
+   {
+   
+      "titulo": "El Principito", 
 
-    "autor": "STRING",
-    "fechaPublicacion": "YY-MM-DD",
-    "id": INT,
-    "stock": INT,
-    "titulo": "STRING"
-}
-
+      "autor": "Antoine de Saint-Exupéry",
+      
+      "fechaPublicacion": "1943-04-06",
+      
+      "stock": 10
+   }
+]
 ## Respuestas
-- 200: Ok
-- 201: Created
-- 204: No Content
-- 400: Bad Request
-- 404: Not Found
+- 200 OK: solicitud exitosa. 
+- 201 Created: recurso creado exitosamente. 
+- 400 Bad request: error de validación en los datos enviados. 
+- 404 Not Found: recurso no encontrado. 

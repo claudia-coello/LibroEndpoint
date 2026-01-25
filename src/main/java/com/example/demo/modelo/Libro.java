@@ -3,6 +3,8 @@ package com.example.demo.modelo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 
@@ -23,13 +25,15 @@ public class Libro {
     @Size(max = 300)
     private String titulo;
 
+    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaPublicacion;
 
-    private String autor;
+    @NotBlank
+    private String autor="Desconocido";
 
     @Min(value = 0, message = "El stock no puede ser negativo")
-    private int stock;
+    private int stock=0;
 
     public Libro(){}
 
